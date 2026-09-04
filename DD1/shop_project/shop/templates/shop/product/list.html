@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Магазин мебели</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        .header {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header a {
+            color: white;
+            text-decoration: none;
+            background: #555;
+            padding: 5px 15px;
+            border-radius: 3px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .categories {
+            background: white;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 3px;
+        }
+        .categories a {
+            color: #333;
+            text-decoration: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            background: #eee;
+            border-radius: 3px;
+        }
+        .categories a.active {
+            background: #333;
+            color: white;
+        }
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .product-item {
+            background: white;
+            padding: 15px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+        .product-item a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .product-price {
+            color: green;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Мебельный магазин</h2>
+        <a href="{% url 'cart_detail' %}">Корзина</a>
+    </div>
+
+    <div class="container">
+        <div class="categories">
+            <a href="{% url 'product_list' %}" class="{% if not category %}active{% endif %}">Все</a>
+            {% for cat in categories %}
+                <a href="{% url 'product_list_by_category' cat.slug %}" class="{% if category.slug == cat.slug %}active{% endif %}">
+                    {{ cat.name }}
+                </a>
+            {% endfor %}
+        </div>
+
+        <div class="products">
+            {% for product in products %}
+                <div class="product-item">
+                    <a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
+                    <div class="product-price">{{ product.price }} ₽</div>
+                </div>
+            {% empty %}
+                <p>Товаров нет</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

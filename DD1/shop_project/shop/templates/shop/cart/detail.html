@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Корзина</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        .header {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header a {
+            color: white;
+            text-decoration: none;
+            background: #555;
+            padding: 5px 15px;
+            border-radius: 3px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .cart-box {
+            background: white;
+            padding: 20px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+        .cart-title {
+            margin-top: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background: #f0f0f0;
+            padding: 10px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+        }
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .total-row {
+            background: #f8f8f8;
+            font-weight: bold;
+        }
+        .total-row td {
+            border-top: 2px solid #333;
+            padding: 12px 10px;
+        }
+        .remove-link {
+            color: red;
+            text-decoration: none;
+        }
+        .empty-cart {
+            text-align: center;
+            padding: 40px 0;
+        }
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: green;
+            color: white;
+        }
+        .btn-secondary {
+            background: #ddd;
+            color: #333;
+        }
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Мебельный магазин</h2>
+        <a href="{% url 'product_list' %}">На главную</a>
+    </div>
+
+    <div class="container">
+        <div class="cart-box">
+            <h1 class="cart-title">Корзина</h1>
+
+            {% if cart.cart %}
+                <table>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Кол-во</th>
+                        <th>Цена</th>
+                        <th>Сумма</th>
+                        <th></th>
+                    </tr>
+                    {% for item in cart %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.price }} ₽</td>
+                            <td>{% widthratio item.price 1 item.quantity %} ₽</td>
+                            <td><a href="{% url 'cart_remove' item.product.id %}" class="remove-link">Удалить</a></td>
+                        </tr>
+                    {% endfor %}
+                    <tr class="total-row">
+                        <td colspan="3">Итого:</td>
+                        <td colspan="2">{{ cart.get_total_price }} ₽</td>
+                    </tr>
+                </table>
+
+                <div class="actions">
+                    <a href="{% url 'product_list' %}" class="btn btn-secondary">Продолжить</a>
+                    <a href="#" class="btn btn-primary" onclick="alert('Заказ оформлен!');">Оформить</a>
+                </div>
+            {% else %}
+                <div class="empty-cart">
+                    <p>Корзина пуста</p>
+                    <a href="{% url 'product_list' %}" class="btn btn-primary">Перейти к покупкам</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

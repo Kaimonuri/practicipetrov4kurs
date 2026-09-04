@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        .header {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header a {
+            color: white;
+            text-decoration: none;
+            background: #555;
+            padding: 5px 15px;
+            border-radius: 3px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .product-card {
+            background: white;
+            padding: 30px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+        .product-title {
+            font-size: 24px;
+        }
+        .product-price {
+            font-size: 22px;
+            color: green;
+            font-weight: bold;
+        }
+        .product-description {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 3px;
+        }
+        .product-stock {
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-add {
+            background: green;
+            color: white;
+        }
+        .btn-back {
+            background: #ddd;
+            color: #333;
+            text-decoration: none;
+            padding: 10px 25px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Мебельный магазин</h2>
+        <a href="{% url 'cart_detail' %}">Корзина</a>
+    </div>
+
+    <div class="container">
+        <div class="product-card">
+            <h1 class="product-title">{{ product.name }}</h1>
+            <div class="product-price">{{ product.price }} ₽</div>
+            <div class="product-description">{{ product.description }}</div>
+            <div class="product-stock">На складе: {{ product.stock }} шт.</div>
+
+            <form action="{% url 'cart_add' product.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-add">Добавить в корзину</button>
+            </form>
+            <a href="{% url 'product_list' %}" class="btn-back">Назад</a>
+        </div>
+    </div>
+</body>
+</html>
