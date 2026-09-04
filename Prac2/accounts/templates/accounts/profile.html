@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Личный кабинет{% endblock %}
+{% block content %}
+<h1 class="h3">Личный кабинет</h1>
+<p>Пользователь: <strong>{{ user.username }}</strong></p>
+<h2 class="h4 mt-4">История заказов</h2>
+{% for order in orders %}
+    <div class="card mb-3"><div class="card-body">
+        <div class="d-flex justify-content-between flex-wrap">
+            <strong>Заказ №{{ order.id }}</strong>
+            <span>{{ order.created|date:'d.m.Y H:i' }}</span>
+        </div>
+        <p class="mb-2">Статус: {{ order.get_status_display }} · Оплачен: {% if order.paid %}Да{% else %}Нет{% endif %}</p>
+        <table class="table table-sm mb-0">
+            <thead><tr><th>Товар</th><th>Количество</th><th>Цена</th><th>Сумма</th></tr></thead>
+            <tbody>
+            {% for item in order.items.all %}
+                <tr><td>{{ item.product.name }}</td><td>{{ item.quantity }}</td><td>{{ item.price }} ₽</td><td>{{ item.get_cost }} ₽</td></tr>
+            {% endfor %}
+            <tr class="fw-bold"><td colspan="3">Итого</td><td>{{ order.get_total_cost }} ₽</td></tr>
+            </tbody>
+        </table>
+    </div></div>
+{% empty %}
+    <p>Заказов пока нет.</p>
+{% endfor %}
+{% endblock %}

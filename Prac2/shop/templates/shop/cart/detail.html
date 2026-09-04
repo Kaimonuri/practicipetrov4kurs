@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Корзина{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h1 class="h3">Корзина</h1>
+        {% if cart|length %}
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead><tr><th>Товар</th><th>Количество</th><th>Цена</th><th>Сумма</th><th></th></tr></thead>
+                    <tbody>
+                    {% for item in cart %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>
+                                <form class="d-flex gap-2" action="{% url 'cart_update' item.product.id %}" method="post">
+                                    {% csrf_token %}
+                                    <input class="form-control form-control-sm" style="width:90px" type="number" name="quantity" min="0" max="{{ item.product.stock }}" value="{{ item.quantity }}">
+                                    <button class="btn btn-sm btn-outline-dark">Обновить</button>
+                                </form>
+                            </td>
+                            <td>{{ item.price }} ₽</td>
+                            <td>{{ item.total_price }} ₽</td>
+                            <td><a class="text-danger" href="{% url 'cart_remove' item.product.id %}">Удалить</a></td>
+                        </tr>
+                    {% endfor %}
+                    <tr class="fw-bold"><td colspan="3">Итого:</td><td colspan="2">{{ cart.get_total_price }} ₽</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{% url 'product_list' %}" class="btn btn-secondary">Продолжить покупки</a>
+                <a href="{% url 'order_create' %}" class="btn btn-success">Оформить заказ</a>
+            </div>
+        {% else %}
+            <p>Корзина пуста.</p>
+            <a href="{% url 'product_list' %}" class="btn btn-success">Перейти к покупкам</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

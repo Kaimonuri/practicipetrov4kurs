@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Магазин мебели{% endblock %}
+
+{% block content %}
+
+<style>
+    .product-card {
+        height: 100%;
+        overflow: hidden;
+        transition: 0.2s;
+    }
+
+    .product-card:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+    }
+
+
+    .product-image {
+        display: block;
+        width: 100%;
+        height: 230px;
+        object-fit: cover;
+        object-position: center;
+    }
+
+
+    .product-image-link {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .product-title {
+        color: #212529;
+        text-decoration: none;
+    }
+
+    .product-title:hover {
+        text-decoration: underline;
+    }
+</style>
+
+
+<div class="container py-4">
+
+    <div class="row">
+
+        <!-- Категории -->
+        <div class="col-md-3 mb-4">
+
+            <h5 class="mb-3">Категории</h5>
+
+            <div class="list-group">
+
+                <a href="{% url 'product_list' %}"
+                   class="list-group-item list-group-item-action
+                   {% if not category %}active{% endif %}">
+                    Все товары
+                </a>
+
+                {% for c in categories %}
+                    <a href="{% url 'product_list_by_category' c.slug %}"
+                       class="list-group-item list-group-item-action
+                       {% if category.slug == c.slug %}active{% endif %}">
+                        {{ c.name }}
+                    </a>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- Товары -->
+        <div class="col-md-9">
+
+            <h2 class="mb-4">
+
+                {% if category %}
+                    {{ category.name }}
+                {% else %}
+                    Все товары
+                {% endif %}
+
+            </h2>
+
+
+            <!-- Фильтры -->
+            <form method="get" class="row g-2 mb-4">
+
+                <div class="col-md-3">
+                    <input
+                        type="number"
+                        name="min_price"
+                        class="form-control"
+                        placeholder="Цена от"
+                        value="{{ min_price }}"
+                    >
+                </div>
+
+                <div class="col-md-3">
+                    <input
+                        type="number"
+                        name="max_price"
+                        class="form-control"
+                        placeholder="Цена до"
+                        value="{{ max_price }}"
+                    >
+                </div>
+
+                <div class="col-md-3">
+                    <select name="sort" class="form-select">
+
+                        <option value="">Сортировка</option>
+
+                        <option value="price_asc"
+                            {% if sort == "price_asc" %}selected{% endif %}>
+                            Сначала дешевле
+                        </option>
+
+                        <option value="price_desc"
+                            {% if sort == "price_desc" %}selected{% endif %}>
+                            Сначала дороже
+                        </option>
+
+                        <option value="new"
+                            {% if sort == "new" %}selected{% endif %}>
+                            Сначала новые
+                        </option>
+
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-dark w-100">
+                        Применить
+                    </button>
+                </div>
+
+                {% if query %}
+                    <input type="hidden" name="q" value="{{ query }}">
+                {% endif %}
+
+            </form>
+
+
+            <!-- Карточки товаров -->
+            <div class="row">
+
+                {% for product in products %}
+
+                    <div class="col-lg-4 col-md-6 mb-4">
+
+                        <div class="card product-card">
+
+                            <!-- Картинка -->
+                            <a href="{% url 'product_detail' product.slug %}"
+                               class="product-image-link">
+
+                                {% if product.image %}
+
+                                    <img
+                                        src="{{ product.image.url }}"
+                                        class="product-image"
+                                        alt="{{ product.name }}"
+                                    >
+
+                                {% else %}
+
+                                    <img
+                                        src="{% static 'img/no_image.png' %}"
+                                        class="product-image"
+                                        alt="Нет изображения"
+                                    >
+
+                                {% endif %}
+
+                            </a>
+
+
+                            <!-- Информация о товаре -->
+                            <div class="card-body">
+
+                                <h5 class="card-title">
+
+                                    <a href="{% url 'product_detail' product.slug %}"
+                                       class="product-title">
+                                        {{ product.name }}
+                                    </a>
+
+                                </h5>
+
+
+                                <p class="card-text fw-bold mb-2">
+                                    {{ product.price }} ₽
+                                </p>
+
+
+                                {% if product.stock > 0 %}
+
+                                    <small class="text-success">
+                                        В наличии: {{ product.stock }}
+                                    </small>
+
+                                {% else %}
+
+                                    <small class="text-danger">
+                                        Нет в наличии
+                                    </small>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="col-12">
+                        <p>Товары не найдены.</p>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

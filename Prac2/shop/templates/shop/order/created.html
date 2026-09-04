@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Заказ оформлен{% endblock %}
+{% block content %}
+<div class="card"><div class="card-body">
+    <h1 class="h3">Заказ успешно оформлен</h1>
+    <p>Номер заказа: <strong>№{{ order.id }}</strong></p>
+    <p>Статус: {{ order.get_status_display }}</p>
+    <a class="btn btn-dark" href="{% url 'product_list' %}">Вернуться в магазин</a>
+    {% if user.is_authenticated %}<a class="btn btn-secondary" href="{% url 'accounts:profile' %}">Личный кабинет</a>{% endif %}
+</div></div>
+{% endblock %}
