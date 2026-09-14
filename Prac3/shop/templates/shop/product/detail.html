@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<div class="card mb-4 shadow-sm overflow-hidden">
+    <div class="row g-0">
+        <div class="col-md-5">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" class="img-fluid w-100 h-100" style="max-height:460px;object-fit:cover" alt="{{ product.name }}">
+            {% else %}
+                <img src="{% static 'img/no_image.png' %}" class="img-fluid w-100 h-100" style="max-height:460px;object-fit:cover" alt="Нет изображения">
+            {% endif %}
+        </div>
+        <div class="col-md-7">
+            <div class="card-body">
+                <h1 class="h3">{{ product.name }}</h1>
+                <div class="fs-4 text-success fw-bold mb-3">{{ product.price }} ₽</div>
+                <div class="bg-light rounded p-3 mb-3">{{ product.description|linebreaks }}</div>
+                <p>На складе: {{ product.stock }} шт.</p>
+                {% if product.stock > 0 %}
+                    <div class="d-flex gap-2 align-items-center flex-wrap mobile-stack">
+                        <form action="{% url 'cart_add' product.id %}" method="post" class="d-flex gap-2 flex-grow-1 mobile-stack" data-cart-form>
+                            {% csrf_token %}
+                            <input class="form-control" style="max-width:100px" type="number" name="quantity" min="1" max="{{ product.stock }}" value="1">
+                            <button class="btn btn-success" type="submit">Добавить в корзину</button>
+                        </form>
+                        {% if user.is_authenticated %}
+                            <form action="{% url 'wishlist_toggle' product.id %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn btn-outline-dark" type="submit">
+                                    {% if is_wishlisted %}Убрать из избранного{% else %}В избранное{% endif %}
+                                </button>
+                            </form>
+                        {% endif %}
+                        <a class="btn btn-secondary" href="{% url 'product_list' %}">Назад</a>
+                    </div>
+                {% else %}
+                    <div class="alert alert-secondary">Нет в наличии.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2 class="h4">Отзывы</h2>
+        {% if can_review %}
+            <form method="post" class="mb-4">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Рейтинг</label>
+                    {{ review_form.rating }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Комментарий</label>
+                    {{ review_form.comment }}
+                </div>
+                <button class="btn btn-dark">Сохранить отзыв</button>
+            </form>
+        {% elif user.is_authenticated %}
+            <p class="text-muted">Отзыв можно оставить только после того, как заказ с этим товаром получит статус «Завершено».</p>
+        {% else %}
+            <p class="text-muted">Войдите в аккаунт. Отзыв станет доступен после завершения заказа с этим товаром.</p>
+        {% endif %}
+
+        {% for review in reviews %}
+            <div class="border-top py-3">
+                <strong>{{ review.user.username }}</strong> · Оценка: {{ review.rating }}/5
+                <div>{{ review.comment|linebreaksbr }}</div>
+                <small class="text-muted">{{ review.created_at|date:'d.m.Y H:i' }}</small>
+            </div>
+        {% empty %}
+            <p>Отзывов пока нет.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

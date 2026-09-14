@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Личный кабинет{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <div>
+        <h1 class="h3 mb-1">Личный кабинет</h1>
+        <div class="text-muted">
+            {{ profile_obj.full_name|default:user.username }}
+            {% if profile_obj.phone %} · {{ profile_obj.phone }}{% endif %}
+        </div>
+    </div>
+    <a class="btn btn-outline-dark" href="{% url 'wishlist' %}">Избранное</a>
+</div>
+
+<h2 class="h4 mt-4">История заказов</h2>
+{% for order in orders %}
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between flex-wrap gap-2">
+                <strong>Заказ №{{ order.id }}</strong>
+                <span>{{ order.created|date:'d.m.Y H:i' }}</span>
+            </div>
+            <p class="mb-1">Статус: <strong>{{ order.get_status_display }}</strong></p>
+            <p class="mb-1">Доставка: {{ order.get_delivery_method_display }}{% if order.delivery_date %}, {{ order.delivery_date|date:'d.m.Y' }}{% endif %}</p>
+            <p class="mb-2">Оплата: {{ order.get_payment_method_display }} · Оплачен: {% if order.paid %}Да{% else %}Нет{% endif %}</p>
+
+            <div class="table-responsive">
+                <table class="table table-sm mb-0 table-mobile-cards">
+                    <thead>
+                        <tr><th>Товар</th><th>Количество</th><th>Цена</th><th>Сумма</th></tr>
+                    </thead>
+                    <tbody>
+                    {% for item in order.items.all %}
+                        <tr>
+                            <td><a href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a></td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.price }} ₽</td>
+                            <td>{{ item.get_cost }} ₽</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if order.discount_amount %}
+                <div class="text-end mt-2 text-success">Скидка: −{{ order.discount_amount }} ₽{% if order.coupon_code %} ({{ order.coupon_code }}){% endif %}</div>
+            {% endif %}
+            <div class="text-end fw-bold mt-1">Итого: {{ order.get_total_cost }} ₽</div>
+            {% if order.status == 'Completed' %}
+                <div class="alert alert-success mt-3 mb-0 py-2">Заказ завершён. Теперь можно оставлять отзывы на купленные товары.</div>
+            {% endif %}
+        </div>
+    </div>
+{% empty %}
+    <p>Заказов пока нет.</p>
+{% endfor %}
+{% endblock %}

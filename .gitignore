@@ -29,3 +29,10 @@ static/
 .DS_Store
 Thumbs.db
 EOF
+# Virtual environment
+.venv/
+**/.venv/
+
+# Secrets
+.env
+**/.env

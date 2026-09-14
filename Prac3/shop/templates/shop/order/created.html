@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Заказ оформлен{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h1 class="h3">Заказ успешно оформлен</h1>
+        <p>Номер заказа: <strong>№{{ order.id }}</strong></p>
+        <p>Статус: {{ order.get_status_display }}</p>
+        <p>Доставка: {{ order.get_delivery_method_display }}{% if order.delivery_date %}, {{ order.delivery_date|date:'d.m.Y' }}{% endif %}</p>
+        <p>Оплата: {{ order.get_payment_method_display }}</p>
+        {% if order.discount_amount %}
+            <p>Скидка: {{ order.discount_amount }} ₽{% if order.coupon_code %} по промокоду {{ order.coupon_code }}{% endif %}</p>
+        {% endif %}
+        <p class="fw-bold">Итого: {{ order.get_total_cost }} ₽</p>
+        <div class="d-flex gap-2 flex-wrap">
+            <a class="btn btn-dark" href="{% url 'product_list' %}">Вернуться в магазин</a>
+            {% if user.is_authenticated %}
+                <a class="btn btn-secondary" href="{% url 'accounts:profile' %}">Личный кабинет</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

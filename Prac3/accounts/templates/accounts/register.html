@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация{% endblock %}
+{% block content %}
+<div class="card mx-auto shadow-sm" style="max-width:640px">
+    <div class="card-body">
+        <h1 class="h3 mb-3">Регистрация</h1>
+        <form method="post" id="registration-form" novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="mb-3" data-field-wrapper="{{ field.name }}">
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    <div class="form-text live-hint" data-live-hint="{{ field.name }}"></div>
+                    {% for error in field.errors %}
+                        <div class="invalid-feedback d-block server-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button class="btn btn-dark w-100" type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(() => {
+    const form = document.getElementById('registration-form');
+    if (!form) return;
+
+    const fields = {
+        username: form.querySelector('[name="username"]'),
+        full_name: form.querySelector('[name="full_name"]'),
+        phone: form.querySelector('[name="phone"]'),
+        email: form.querySelector('[name="email"]'),
+        password1: form.querySelector('[name="password1"]'),
+        password2: form.querySelector('[name="password2"]'),
+    };
+
+    const setState = (name, valid, message = '') => {
+        const input = fields[name];
+        const hint = form.querySelector(`[data-live-hint="${name}"]`);
+        if (!input || !hint) return;
+        input.classList.toggle('is-valid', valid === true);
+        input.classList.toggle('is-invalid', valid === false);
+        hint.textContent = message;
+        hint.className = `form-text live-hint ${valid === true ? 'text-success' : valid === false ? 'text-danger' : ''}`;
+    };
+
+    let usernameTimer;
+    fields.username.addEventListener('input', () => {
+        clearTimeout(usernameTimer);
+        const value = fields.username.value.trim();
+        if (!/^[A-Za-z0-9]{6,}$/.test(value)) {
+            setState('username', false, 'Только латиница и цифры, минимум 6 символов.');
+            return;
+        }
+        setState('username', null, 'Проверяем логин...');
+        usernameTimer = setTimeout(async () => {
+            try {
+                const url = `{% url 'accounts:validate_username' %}?username=${encodeURIComponent(value)}`;
+                const response = await fetch(url, {headers: {'X-Requested-With': 'XMLHttpRequest'}});
+                const data = await response.json();
+                setState('username', data.valid, data.message);
+            } catch (error) {
+                setState('username', null, 'Логин будет проверен при отправке формы.');
+            }
+        }, 300);
+    });
+
+    fields.full_name.addEventListener('input', () => {
+        const value = fields.full_name.value.trim().replace(/\s+/g, ' ');
+        const valid = /^[А-Яа-яЁё]+(?: [А-Яа-яЁё]+)+$/.test(value);
+        setState('full_name', valid, valid ? 'ФИО введено корректно.' : 'Только кириллица и пробелы.');
+    });
+
+    fields.phone.addEventListener('input', () => {
+        const valid = /^8\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(fields.phone.value.trim());
+        setState('phone', valid, valid ? 'Формат телефона верный.' : 'Формат: 8(XXX)XXX-XX-XX');
+    });
+
+    fields.email.addEventListener('input', () => {
+        const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email.value.trim());
+        setState('email', valid, valid ? 'Email введён корректно.' : 'Введите корректный email.');
+    });
+
+    const checkPasswords = () => {
+        const password = fields.password1.value;
+        setState('password1', password.length >= 8, password.length >= 8 ? 'Минимальная длина соблюдена.' : 'Минимум 8 символов.');
+        if (fields.password2.value) {
+            const same = password === fields.password2.value;
+            setState('password2', same, same ? 'Пароли совпадают.' : 'Пароли не совпадают.');
+        }
+    };
+    fields.password1.addEventListener('input', checkPasswords);
+    fields.password2.addEventListener('input', checkPasswords);
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Оформление заказа{% endblock %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-12 col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="h3">Оформление заказа</h1>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+                    <div class="row g-3">
+                        {% for field in form %}
+                            <div class="{% if field.name == 'address' %}col-12{% else %}col-12 col-sm-6{% endif %}">
+                                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% for error in field.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="btn btn-success mt-4 w-100">Оформить заказ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="h5">Ваш заказ</h2>
+                {% for item in cart %}
+                    <div class="d-flex justify-content-between border-bottom py-2 gap-2">
+                        <span>{{ item.product.name }} × {{ item.quantity }}</span>
+                        <span class="text-nowrap">{{ item.total_price }} ₽</span>
+                    </div>
+                {% endfor %}
+                <div class="d-flex justify-content-between mt-3"><span>Товары:</span><span>{{ cart.get_total_price }} ₽</span></div>
+                {% if cart.get_discount %}
+                    <div class="d-flex justify-content-between text-success"><span>Скидка:</span><span>−{{ cart.get_discount }} ₽</span></div>
+                {% endif %}
+                <div class="d-flex justify-content-between fw-bold fs-5 mt-2"><span>Итого:</span><span>{{ cart.get_total_after_discount }} ₽</span></div>
+                {% if cart.coupon %}
+                    <div class="small text-muted mt-2">Промокод: {{ cart.coupon.code }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

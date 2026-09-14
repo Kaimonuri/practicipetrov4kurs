@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Избранное{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Избранное</h1>
+    <a class="btn btn-outline-dark" href="{% url 'product_list' %}">Каталог</a>
+</div>
+<div class="row g-3">
+    {% for item in wishlist_items %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 product-card">
+                <a href="{% url 'product_detail' item.product.slug %}">
+                    {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" class="product-image" alt="{{ item.product.name }}">
+                    {% else %}
+                        <img src="{% static 'img/no_image.png' %}" class="product-image" alt="Нет изображения">
+                    {% endif %}
+                </a>
+                <div class="card-body d-flex flex-column">
+                    <a class="fw-bold text-dark text-decoration-none" href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a>
+                    <div class="text-success fw-bold fs-5 mt-1 mb-3">{{ item.product.price }} ₽</div>
+                    <form action="{% url 'wishlist_toggle' item.product.id %}" method="post" class="mt-auto">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{% url 'wishlist' %}">
+                        <button class="btn btn-outline-danger w-100" type="submit">Удалить из избранного</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12"><div class="alert alert-light border">В избранном пока ничего нет.</div></div>
+    {% endfor %}
+</div>
+{% endblock %}

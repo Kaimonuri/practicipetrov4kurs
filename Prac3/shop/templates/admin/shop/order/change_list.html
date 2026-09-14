@@ -1,0 +1,50 @@
+{% extends "admin/change_list.html" %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    @media (min-width: 900px) {
+        #result_list thead {
+            display: none;
+        }
+        #result_list,
+        #result_list tbody {
+            display: block;
+        }
+        #result_list tbody {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        #result_list tbody tr {
+            display: grid;
+            grid-template-columns: 28px 1fr;
+            gap: 7px 10px;
+            padding: 16px;
+            border: 1px solid var(--hairline-color);
+            border-radius: 12px;
+            background: var(--body-bg);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, .06);
+        }
+        #result_list tbody td,
+        #result_list tbody th {
+            display: block;
+            padding: 2px 0;
+            border: 0;
+            white-space: normal;
+        }
+        #result_list tbody td.action-checkbox {
+            grid-row: 1 / span 10;
+        }
+        #result_list tbody th.field-id::before { content: "Заказ: "; font-weight: 700; }
+        #result_list tbody td.field-customer_name::before { content: "Клиент: "; font-weight: 700; }
+        #result_list tbody td.field-email::before { content: "Email: "; font-weight: 700; }
+        #result_list tbody td.field-delivery_method::before { content: "Доставка: "; font-weight: 700; }
+        #result_list tbody td.field-payment_method::before { content: "Оплата: "; font-weight: 700; }
+        #result_list tbody td.field-delivery_date::before { content: "Дата: "; font-weight: 700; }
+        #result_list tbody td.field-paid::before { content: "Оплачен: "; font-weight: 700; }
+        #result_list tbody td.field-status::before { content: "Статус: "; font-weight: 700; }
+        #result_list tbody td.field-created::before { content: "Создан: "; font-weight: 700; }
+    }
+</style>
+{% endblock %}

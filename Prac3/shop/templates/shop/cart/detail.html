@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Корзина{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h1 class="h3">Корзина</h1>
+        {% if cart|length %}
+            <div class="table-responsive">
+                <table class="table align-middle table-mobile-cards">
+                    <thead>
+                        <tr><th>Товар</th><th>Количество</th><th>Цена</th><th>Сумма</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                    {% for item in cart %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>
+                                <form class="d-flex gap-2 mobile-stack" action="{% url 'cart_update' item.product.id %}" method="post">
+                                    {% csrf_token %}
+                                    <input class="form-control form-control-sm" style="max-width:90px" type="number" name="quantity" min="0" max="{{ item.product.stock }}" value="{{ item.quantity }}">
+                                    <button class="btn btn-sm btn-outline-dark">Обновить</button>
+                                </form>
+                            </td>
+                            <td>{{ item.price }} ₽</td>
+                            <td>{{ item.total_price }} ₽</td>
+                            <td><a class="text-danger" href="{% url 'cart_remove' item.product.id %}">Удалить</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row g-3 mt-1">
+                <div class="col-md-6">
+                    <div class="border rounded p-3 bg-light h-100">
+                        <h2 class="h6">Промокод</h2>
+                        {% if cart.coupon %}
+                            <p class="mb-2">Применён: <strong>{{ cart.coupon.code }}</strong></p>
+                            <form method="post" action="{% url 'coupon_remove' %}">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-outline-danger">Удалить промокод</button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'coupon_apply' %}" class="d-flex gap-2 mobile-stack">
+                                {% csrf_token %}
+                                <input class="form-control" name="code" placeholder="Введите промокод" required>
+                                <button class="btn btn-dark">Применить</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="border rounded p-3 bg-light h-100">
+                        <div class="d-flex justify-content-between"><span>Товары:</span><strong>{{ cart.get_total_price }} ₽</strong></div>
+                        {% if cart.get_discount %}
+                            <div class="d-flex justify-content-between text-success mt-1"><span>Скидка:</span><strong>−{{ cart.get_discount }} ₽</strong></div>
+                        {% endif %}
+                        <hr>
+                        <div class="d-flex justify-content-between fs-5"><span>Итого:</span><strong>{{ cart.get_total_after_discount }} ₽</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3 mobile-stack">
+                <a href="{% url 'product_list' %}" class="btn btn-secondary">Продолжить покупки</a>
+                <a href="{% url 'order_create' %}" class="btn btn-success">Оформить заказ</a>
+            </div>
+        {% else %}
+            <p>Корзина пуста.</p>
+            <a href="{% url 'product_list' %}" class="btn btn-success">Перейти к покупкам</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
