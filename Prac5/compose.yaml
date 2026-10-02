@@ -1,0 +1,31 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: prac4-store:latest
+    environment:
+      PORT: "3000"
+      DB_PATH: /app/data/dev.db
+      SESSION_SECRET: ${SESSION_SECRET:-prac4-docker-local-secret-change-me}
+      COOKIE_SECURE: "false"
+    ports:
+      - "${APP_PORT:-3001}:3000"
+    volumes:
+      - prac4_data:/app/data
+      - prac4_uploads:/app/public/uploads
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3000/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 3s
+      start_period: 10s
+      retries: 5
+
+volumes:
+  prac4_data:
+  prac4_uploads:

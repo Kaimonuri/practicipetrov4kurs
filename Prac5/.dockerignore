@@ -1,0 +1,11 @@
+node_modules
+.git
+.gitignore
+.env
+dev.db-shm
+dev.db-wal
+npm-debug.log*
+Dockerfile*
+compose*.yml
+compose*.yaml
+README*.md

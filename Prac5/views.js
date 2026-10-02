@@ -1,0 +1,32 @@
+function esc(value) {
+  return String(value ?? "").replace(
+    /[&<>"']/g,
+    (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
+        c
+      ],
+  );
+}
+function money(cents) {
+  return (
+    new Intl.NumberFormat("ru-RU", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(cents / 100) + " ₽"
+  );
+}
+function form(action, fields, button, encoding = "", classes = "") {
+  return `<form action="${esc(action)}" method="post" ${encoding ? `enctype="${encoding}"` : ""} class="${classes}">${fields}<button class="btn btn-dark">${esc(button)}</button></form>`;
+}
+function card(p, user, detail = false) {
+  const image = p.image
+    ? "/public/uploads/" + encodeURIComponent(p.image)
+    : "/public/no_image.png";
+  if (detail)
+    return `<div class="card mb-4 shadow-sm overflow-hidden"><div class="row g-0"><div class="col-md-5"><img src="${image}" class="img-fluid w-100 h-100 product-detail-image" alt="${esc(p.name)}" onerror="this.onerror=null;this.src='/public/no_image.png'"></div><div class="col-md-7"><div class="card-body"><h1 class="h3">${esc(p.name)}</h1><div class="fs-4 text-success fw-bold mb-3">${money(p.price)}</div><div class="bg-light rounded p-3 mb-3">${esc(p.description)}</div><p>На складе: ${p.stock} шт.</p><div class="d-flex gap-2 align-items-center flex-wrap mobile-stack">${p.stock ? form(`/cart/add/${p.id}`, `<input class="form-control" style="max-width:100px" type="number" name="quantity" min="1" max="${p.stock}" value="1">`, "Добавить в корзину", "", "d-flex gap-2 flex-grow-1 mobile-stack") : ""}${user ? form(`/wishlist/${p.id}`, "", "В избранное") : ""}<a class="btn btn-secondary" href="/">Назад</a></div></div></div></div></div>`;
+  return `<div class="col-12 col-sm-6 col-md-4 col-lg-3"><div class="card h-100 product-card"><a href="/product/${esc(p.slug)}"><img src="${image}" class="product-image card-img-top" alt="${esc(p.name)}" onerror="this.onerror=null;this.src='/public/no_image.png'"></a><div class="card-body d-flex flex-column"><a class="fw-bold text-dark text-decoration-none" href="/product/${esc(p.slug)}">${esc(p.name)}</a><div class="text-success fw-bold fs-5 mt-1">${money(p.price)}</div><div class="small text-muted mb-3">На складе: ${p.stock}</div><div class="d-flex gap-2 mt-auto mobile-stack">${p.stock ? form(`/cart/add/${p.id}`, '<input type="hidden" name="quantity" value="1">', "В корзину", "", "flex-grow-1 cart-form") : ""}${user ? form(`/wishlist/${p.id}`, "", "♡", "", "wishlist-form") : ""}</div></div></div></div>`;
+}
+function layout(title, content, user, notice, count) {
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} · Мебельный магазин</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link rel="stylesheet" href="/public/style.css"><script src="/public/app.js" defer></script></head><body><nav class="navbar navbar-expand-lg navbar-dark"><div class="container"><a class="navbar-brand" href="/">Мебельный магазин</a><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Открыть меню"><span class="navbar-toggler-icon"></span></button><div class="collapse navbar-collapse" id="mainNav"><form class="d-flex ms-lg-3 my-2 my-lg-0 flex-grow-1" action="/" method="get"><input class="form-control me-2" type="search" name="q" placeholder="Поиск товаров"><button class="btn btn-outline-light" type="submit">Найти</button></form><ul class="navbar-nav ms-lg-3 align-items-lg-center"><li class="nav-item"><a class="nav-link" href="/cart">Корзина${count ? ` (${count})` : ""}</a></li>${user ? `<li class="nav-item"><a class="nav-link" href="/wishlist">Избранное</a></li><li class="nav-item"><a class="nav-link" href="/profile">Профиль</a></li>${user.role === "admin" ? '<li class="nav-item"><a class="nav-link" href="/admin">Админ</a></li>' : ""}<li class="nav-item"><form action="/logout" method="post"><button class="btn btn-link nav-link" type="submit">Выйти</button></form></li>` : '<li class="nav-item"><a class="nav-link" href="/login">Войти</a></li><li class="nav-item"><a class="nav-link" href="/register">Регистрация</a></li>'}</ul></div></div></nav><main class="container py-4">${notice ? `<div class="alert alert-info alert-dismissible fade show app-alert" role="alert">${esc(notice)}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button></div>` : ""}${content}</main><footer class="border-top bg-white py-3 mt-4"><div class="container text-muted small">Мебельный магазин</div></footer><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script></body></html>`;
+}
+module.exports = { esc, money, form, card, layout };
