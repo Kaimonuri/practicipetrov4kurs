@@ -1,0 +1,414 @@
+/* Общие настройки страницы: обычный шрифт, светлый фон и спокойные цвета. */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    background: #f3f3f3;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+a {
+    color: #28608e;
+}
+
+/* Шапка с названием сайта и ссылками. */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px max(20px, calc((100% - 1000px) / 2));
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+}
+
+.brand {
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.brand small {
+    display: block;
+    font-size: 13px;
+    font-weight: normal;
+    color: #666;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+nav form {
+    margin: 0;
+}
+
+/* Основная часть сайта и заголовки. */
+main {
+    max-width: 1000px;
+    min-height: 70vh;
+    margin: 28px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    line-height: 1.3;
+}
+
+h2 {
+    margin: 0 0 16px;
+    font-size: 22px;
+    line-height: 1.3;
+}
+
+p {
+    margin: 12px 0;
+}
+
+.auth-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+/* Простые белые блоки без теней и декоративных элементов. */
+.panel {
+    padding: 24px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.narrow {
+    max-width: 560px;
+    margin: auto;
+}
+
+.muted,
+.hint {
+    color: #666;
+}
+
+.hint {
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+/* Поля всех форм оформлены одинаково. */
+label {
+    display: block;
+    margin: 16px 0 6px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input,
+select,
+textarea {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    font: inherit;
+    font-size: 16px;
+    color: #333;
+    background: #fff;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #8db9dc;
+    outline-offset: 1px;
+}
+
+input[aria-invalid="true"] {
+    border-color: #a62232;
+}
+
+/* Кнопки: синие основные и серые дополнительные. */
+button,
+.button {
+    display: inline-block;
+    min-height: 40px;
+    padding: 9px 16px;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    font: inherit;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.primary {
+    color: #fff;
+    background: #28608e;
+    border-color: #28608e;
+}
+
+.primary:hover {
+    background: #204d72;
+}
+
+form > .primary {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.secondary {
+    margin-top: 12px;
+    color: #333;
+    background: #eee;
+}
+
+.secondary:hover {
+    background: #ddd;
+}
+
+.link {
+    padding: 0;
+    color: #28608e;
+    background: none;
+    border: none;
+    text-decoration: underline;
+}
+
+.bottom-link {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* Ошибки и уведомления о результате действия. */
+.error {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #a62232;
+}
+
+.notice {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 12px;
+    color: #245133;
+    background: #e8f3e9;
+    border: 1px solid #adc5b1;
+    animation: appear 0.2s;
+}
+
+.notice button {
+    padding: 0 8px;
+    background: none;
+    border: none;
+}
+
+/* Четыре фотографии одинакового размера и кнопки переключения. */
+.slider {
+    margin-top: 20px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+
+.slider img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.slider img[hidden] {
+    display: none;
+}
+
+.slider-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 8px;
+}
+
+.slider button {
+    min-width: 44px;
+    padding: 6px 12px;
+    color: #333;
+    background: #eee;
+}
+
+/* Список заявок и статусы. */
+.page-heading,
+.card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.card-top small {
+    color: #666;
+}
+
+.badge {
+    padding: 3px 8px;
+    font-size: 13px;
+    background: #eee;
+    border: 1px solid #ccc;
+}
+
+.status-1 {
+    color: #715109;
+    background: #fff4d9;
+}
+
+.status-2 {
+    color: #245133;
+    background: #e8f3e9;
+}
+
+.review {
+    margin-top: 16px;
+    padding: 12px;
+    background: #f5f5f5;
+    border-left: 3px solid #ccc;
+}
+
+.review p,
+.description {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.empty {
+    grid-column: 1 / -1;
+    text-align: center;
+}
+
+/* Фильтр статусов и переходы между страницами администратора. */
+.filter {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.filter label {
+    min-width: 230px;
+}
+
+.filter button {
+    margin: 0 0 6px;
+}
+
+.filter > a,
+.filter > span {
+    margin-bottom: 14px;
+}
+
+.pagination {
+    justify-content: center;
+    margin: 24px 0;
+}
+
+footer {
+    padding: 20px;
+    border-top: 1px solid #ccc;
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Небольшая анимация уведомлений по заданию. */
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* На телефоне блоки и карточки идут в одну колонку. */
+@media (max-width: 700px) {
+    header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 16px;
+    }
+
+    nav {
+        gap: 14px;
+        font-size: 14px;
+    }
+
+    main {
+        margin: 22px auto;
+        padding: 0 16px;
+    }
+
+    .auth-grid,
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .panel {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    .page-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .page-heading .button,
+    .filter label {
+        width: 100%;
+    }
+
+    .pagination {
+        font-size: 14px;
+    }
+}
+
+/* Учитываем системную настройку уменьшения движения. */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}

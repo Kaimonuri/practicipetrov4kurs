@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="640" viewBox="0 0 1220 640">
+    <rect width="1220" height="640" fill="#f5f7fa"/>
+    <style>text{font-family:Arial;font-size:16px;fill:#243546}.title{font-size:20px;font-weight:bold}</style>
+    <rect x="30" y="50" width="320" height="247" rx="8" fill="white" stroke="#839ab4"/>
+    <text x="46" y="80" class="title">users</text>
+    <text x="46" y="112">id: INTEGER PK</text>
+    <text x="46" y="139">login: TEXT</text>
+    <text x="46" y="166">password_hash: TEXT</text>
+    <text x="46" y="193">full_name: TEXT</text>
+    <text x="46" y="220">phone: TEXT</text>
+    <text x="46" y="247">email: TEXT</text>
+    <text x="46" y="274">role: TEXT</text>
+    <rect x="30" y="370" width="320" height="112" rx="8" fill="white" stroke="#839ab4"/>
+    <text x="46" y="400" class="title">courses</text>
+    <text x="46" y="432">id: INTEGER PK</text>
+    <text x="46" y="459">name: TEXT</text>
+    <rect x="450" y="50" width="320" height="247" rx="8" fill="white" stroke="#839ab4"/>
+    <text x="466" y="80" class="title">applications</text>
+    <text x="466" y="112">id: INTEGER PK</text>
+    <text x="466" y="139">user_id: INTEGER FK</text>
+    <text x="466" y="166">course_id: INTEGER FK</text>
+    <text x="466" y="193">start_date: TEXT</text>
+    <text x="466" y="220">payment: TEXT</text>
+    <text x="466" y="247">status: TEXT</text>
+    <text x="466" y="274">created_at: TEXT</text>
+    <rect x="870" y="50" width="320" height="166" rx="8" fill="white" stroke="#839ab4"/>
+    <text x="886" y="80" class="title">reviews</text>
+    <text x="886" y="112">id: INTEGER PK</text>
+    <text x="886" y="139">application_id: INTEGER FK</text>
+    <text x="886" y="166">text: TEXT</text>
+    <text x="886" y="193">created_at: TEXT</text>
+    <path d="M350 110 H450 M350 420 H405 V145 H450 M770 110 H870" stroke="#2567b1" stroke-width="2" fill="none"/>
+    <text x="365" y="100">1 : N</text>
+    <text x="355" y="410">1 : N</text>
+    <text x="785" y="100">1 : 0..1</text>
+    <text x="30" y="590">PK — первичный ключ; FK — внешний ключ. Отзыв связан с пользователем через заявку.</text>
+    <text x="30" y="618">Источник: PRAGMA table_info / foreign_key_list базы SQLite.</text>
+</svg>

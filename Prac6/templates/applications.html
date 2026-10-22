@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% from '_fields.html' import csrf with context %}
+{% block content %}
+    <div class="page-heading">
+        <div>
+            <span class="eyebrow">Личный кабинет</span>
+            <h1>Мои заявки</h1>
+            <p class="muted">{{ g.user.full_name }}, здесь можно следить за обучением.</p>
+        </div>
+        <a class="primary button" href="/applications/new">+ Новая заявка</a>
+    </div>
+    <div class="cards">
+        {% for a in rows %}
+            <article class="panel">
+                <div class="card-top">
+                    <small>Заявка № {{ a.id }}</small>
+                    <span class="badge status-{{ statuses.index(a.status) }}">{{ a.status }}</span>
+                </div>
+                <h2>{{ a.name }}</h2>
+                <p>
+                    Начало обучения: <strong>{{ a.start_date|date_ru }}</strong>
+                </p>
+                <p class="muted">Оплата: {{ a.payment }}</p>
+                {% if a.review %}
+                    <div class="review">
+                        <strong>Ваш отзыв</strong>
+                        <p>{{ a.review }}</p>
+                    </div>
+                {% elif a.status == "Обучение завершено" %}
+                    <form method="post" action="/applications/{{ a.id }}/review">
+                        {{ csrf() }}
+                        <label>
+                            Отзыв о качестве образовательных услуг<textarea name="text" required maxlength="2000" rows="3" placeholder="Расскажите о вашем обучении">
+</textarea>
+                        </label>
+                        <button class="secondary">Оставить отзыв</button>
+                    </form>
+                {% else %}
+                    <p class="hint">Отзыв станет доступен после завершения обучения.</p>
+                {% endif %}
+            </article>
+        {% else %}
+            <section class="panel empty">
+                <h2>Пока нет заявок</h2>
+                <p class="muted">Выберите первую программу дополнительного образования.</p>
+                <a href="/applications/new">Подать заявку →</a>
+            </section>
+        {% endfor %}
+    </div>
+{% endblock %}

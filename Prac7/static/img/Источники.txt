@@ -1,0 +1,15 @@
+Фотографии слайдера: Unsplash
+Лицензия: https://unsplash.com/license
+
+slide1.jpg
+https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&h=675&q=85
+
+slide2.jpg
+https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&h=675&q=85
+
+slide3.jpg
+https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=1200&h=675&q=85
+
+slide4.jpg
+https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1200&h=675&q=85
+

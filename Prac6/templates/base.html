@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{{ title }} — Корочки.есть</title>
+        <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+        <script defer src="{{ url_for('static',filename='app.js') }}"></script>
+    </head>
+    <body>
+        <header>
+            <a class="brand" href="/">Корочки<span>.есть</span>
+                <small>Дополнительное образование</small>
+            </a>
+            <nav>
+                <a href="{{ url_for('home') }}">На главную</a>
+                {% if g.user %}
+                    {% if g.user.role == "admin" %}
+                        <a href="/admin">Администратор</a>
+                    {% endif %}
+                    <a href="/applications">Мои заявки</a>
+                    <form action="/logout" method="post">
+                        <input type="hidden" name="csrf" value="{{ session.csrf }}">
+                        <button class="link">Выйти</button>
+                    </form>
+                {% else %}
+                    <a href="/login">Вход</a>
+                    <a href="/register">Регистрация</a>
+                {% endif %}
+            </nav>
+        </header>
+        <main>
+            {% for message in get_flashed_messages() %}
+                <div class="notice" role="status">
+                    {{ message }}
+                    <button type="button"
+                            aria-label="Закрыть уведомление"
+                            onclick="this.parentElement.remove()">×</button>
+                </div>
+            {% endfor %}
+            {% block content %}{% endblock %}
+        </main>
+        <footer>
+            Корочки.есть · Портал записи на онлайн-курсы
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+{# Регистрация. Значения полей и ошибки проверки приходят из функции register(). #}
+{% extends "base.html" %}
+{% from '_fields.html' import field,csrf with context %}
+{% block content %}
+    <section class="panel narrow">
+        <h1>Регистрация</h1>
+        <p class="muted">Все поля обязательны для заполнения.</p>
+        <form method="post">
+            {{ csrf() }}
+            {{ field(
+                'full_name',
+                'ФИО',
+                placeholder='Иванов Иван Иванович',
+                value=data.get('full_name', ''),
+                error=errors.get('full_name', ''),
+                autocomplete='name'
+            ) }}
+            {{ field(
+                'login',
+                'Логин',
+                placeholder='Латиница и цифры, от 6 символов',
+                value=data.get('login', ''),
+                error=errors.get('login', ''),
+                autocomplete='username'
+            ) }}
+            {{ field(
+                'password',
+                'Пароль',
+                'password',
+                placeholder='Минимум 8 символов',
+                error=errors.get('password', ''),
+                autocomplete='new-password'
+            ) }}
+            {{ field(
+                'phone',
+                'Телефон',
+                'tel',
+                placeholder='8(999)123-45-67',
+                value=data.get('phone', ''),
+                error=errors.get('phone', ''),
+                autocomplete='tel'
+            ) }}
+            {{ field(
+                'email',
+                'Электронная почта',
+                'email',
+                placeholder='name@example.ru',
+                value=data.get('email', ''),
+                error=errors.get('email', ''),
+                autocomplete='email'
+            ) }}
+            <button class="primary">Зарегистрироваться</button>
+        </form>
+        <p class="bottom-link">
+            Уже зарегистрированы? <a href="/login">Вход</a>
+        </p>
+    </section>
+{% endblock %}

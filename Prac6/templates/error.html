@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+    <section class="panel narrow">
+        <h1>Ошибка {{ error.code }}</h1>
+        <p>
+            {% if error.code == 403 %}Недостаточно прав для этого действия.{% elif error.code == 404 %}Страница или заявка не найдена.{% else %}
+                {{ error.description }}
+            {% endif %}
+        </p>
+        <a href="/">На главную</a>
+    </section>
+{% endblock %}

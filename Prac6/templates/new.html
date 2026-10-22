@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% from '_fields.html' import field,csrf with context %}
+{% block content %}
+    <section class="panel narrow">
+        <a href="/applications">← Мои заявки</a>
+        <h1>Заявка на обучение</h1>
+        <p class="muted">Выберите программу и удобный способ оплаты.</p>
+        <form method="post">
+            {{ csrf() }}
+            <label>
+                Наименование курса<select name="course_id" required>
+                <option value="">Выберите курс</option>
+                {% for c in courses %}
+                    <option value="{{ c.id }}"
+                            {% if data.get('course_id') == c.id|string %}selected{% endif %}>
+                        {{ c.name }}
+                    </option>
+                {% endfor %}
+                </select>
+            </label>
+            {% if errors.course_id %}
+                <p class="error">{{ errors.course_id }}</p>
+            {% endif %}
+            {{ field(
+                'start_date',
+                'Желаемая дата начала',
+                'text',
+                'ДД.ММ.ГГГГ',
+                data.get('start_date', ''),
+                errors.get('start_date', '')
+            ) }}
+            <label>
+                Способ оплаты<select name="payment" required>
+                <option value="">Выберите способ оплаты</option>
+                {% for p in payments %}
+                    <option {% if data.get('payment') == p %}selected{% endif %}>{{ p }}</option>
+                {% endfor %}
+                </select>
+            </label>
+            {% if errors.payment %}
+                <p class="error">{{ errors.payment }}</p>
+            {% endif %}
+            <button class="primary">Отправить</button>
+        </form>
+    </section>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% from '_fields.html' import csrf with context %}
+{% block content %}
+    <span class="eyebrow">Управление обучением</span>
+    <h1>Панель администратора</h1>
+    <form class="filter" method="get">
+        <label>
+            Статус заявки<select name="status">
+            <option value="">Все статусы</option>
+            {% for s in statuses %}
+                <option {% if selected == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+            </select>
+        </label>
+        <button class="secondary">Применить</button>
+        <a href="/admin">Сбросить</a>
+        <span class="muted">Найдено: {{ total }}</span>
+    </form>
+    <div class="cards">
+        {% for a in rows %}
+            <article class="panel">
+                <div class="card-top">
+                    <small>Заявка № {{ a.id }} · {{ a.created_at }}</small>
+                    <span class="badge status-{{ statuses.index(a.status) }}">{{ a.status }}</span>
+                </div>
+                <h2>{{ a.name }}</h2>
+                <p>
+                    <strong>{{ a.full_name }}</strong>
+                    <br>
+                    {{ a.phone }}
+                    <br>
+                    {{ a.email }}
+                </p>
+                <p>
+                    Начало: {{ a.start_date|date_ru }}
+                    <br>
+                    Оплата: {{ a.payment }}
+                </p>
+                <form method="post" action="/admin/{{ a.id }}/status">
+                    {{ csrf() }}
+                    <label>
+                        Статус<select name="status">
+                        {% for s in statuses %}
+                            <option {% if a.status == s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                        </select>
+                    </label>
+                    <button class="secondary">Сохранить статус</button>
+                </form>
+                {% if a.review %}
+                    <div class="review">
+                        <strong>Отзыв студента</strong>
+                        <p>{{ a.review }}</p>
+                    </div>
+                {% endif %}
+            </article>
+        {% else %}
+            <p class="panel empty">Заявок с выбранным статусом нет.</p>
+        {% endfor %}
+    </div>
+    <nav class="pagination" aria-label="Страницы заявок">
+        {% if page > 1 %}
+            <a href="{{ url_for('admin',status=selected,page=page-1) }}">← Назад</a>
+        {% endif %}
+        <span>Страница {{ page }} из {{ pages }}</span>
+        {% if page < pages %}
+            <a href="{{ url_for('admin',status=selected,page=page+1) }}">Далее →</a>
+        {% endif %}
+    </nav>
+{% endblock %}

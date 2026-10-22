@@ -36,3 +36,13 @@ EOF
 # Secrets
 .env
 **/.env
+
+# Исходные стили, скрипты и изображения практик Flask
+!Prac6/static/
+!Prac6/static/**
+!Prac7/static/
+!Prac7/static/**
+
+# Локальные данные и ключи приложений Flask
+Prac6/instance/
+Prac7/instance/

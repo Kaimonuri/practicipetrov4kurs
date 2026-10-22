@@ -1,0 +1,20 @@
+{# Макросы Jinja2 переиспользуют одинаковую разметку полей и скрытого CSRF-токена. #}
+{% macro field(name, label, type='text', placeholder='', value='', error='', autocomplete='off') %}
+    <label>
+        {{ label }}
+        <input type="{{ type }}"
+               name="{{ name }}"
+               value="{{ value }}"
+               placeholder="{{ placeholder }}"
+               autocomplete="{{ autocomplete }}"
+               required
+               {% if error %}aria-invalid="true" aria-describedby="error-{{ name }}"{% endif %}>
+    </label>
+    {% if error %}
+        <p class="error" id="error-{{ name }}">{{ error }}</p>
+    {% endif %}
+{% endmacro %}
+{# Токен передаётся вместе с POST-формой и проверяется в prepare(). #}
+{% macro csrf() %}
+    <input type="hidden" name="csrf" value="{{ session.csrf }}">
+{% endmacro %}

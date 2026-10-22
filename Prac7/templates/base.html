@@ -1,0 +1,51 @@
+{# Общий каркас страниц: подключение CSS/JS, шапка, навигация, уведомления и подвал. #}
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{{ title }} — МастерСервис</title>
+        <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+        <script defer src="{{ url_for('static',filename='app.js') }}"></script>
+    </head>
+    <body>
+        <header>
+            <a class="brand" href="/">МастерСервис
+                <small>Ремонт и обслуживание техники</small>
+            </a>
+            {# Состав меню зависит от того, выполнен ли вход и какая роль у пользователя. #}
+            <nav>
+                <a href="{{ url_for('home') }}">На главную</a>
+                {% if g.user %}
+                    {% if g.user.role == "admin" %}
+                        <a href="/admin">Администратор</a>
+                    {% endif %}
+                    <a href="/applications">Мои заявки</a>
+                    <form action="/logout" method="post">
+                        <input type="hidden" name="csrf" value="{{ session.csrf }}">
+                        <button class="link">Выйти</button>
+                    </form>
+                {% else %}
+                    <a href="/login">Вход</a>
+                    <a href="/register">Регистрация</a>
+                {% endif %}
+            </nav>
+        </header>
+        <main>
+            {# flash() передаёт сюда уведомления об отправке заявки и других действиях. #}
+            {% for message in get_flashed_messages() %}
+                <div class="notice" role="status">
+                    {{ message }}
+                    <button type="button"
+                            aria-label="Закрыть уведомление"
+                            onclick="this.parentElement.remove()">×</button>
+                </div>
+            {% endfor %}
+            {# Каждая дочерняя страница вставляет сюда собственное содержимое. #}
+            {% block content %}{% endblock %}
+        </main>
+        <footer>
+            МастерСервис · Сервисный центр
+        </footer>
+    </body>
+</html>
